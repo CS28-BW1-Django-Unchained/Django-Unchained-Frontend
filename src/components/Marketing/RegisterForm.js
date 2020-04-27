@@ -13,22 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { axiosWithAuth } from '../../utils/axiosWithAuth'
+import { useHistory } from 'react-router';
 
 
-
-function RegisterForm() {
-
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-      </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,11 +39,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+    let history = useHistory()
     const classes = useStyles();
     const [userInfo, setUserInfo] = useState(
         {
             username: "",
-            password1: ""
+            password1: "",
+            password2: ""
         });
 
     function handleChange(event) {
@@ -66,6 +55,7 @@ export default function SignUp() {
         axiosWithAuth().post("https://lambda-mud-test.herokuapp.com/api/registration/", user)
             .then(res => {
                 sessionStorage.setItem("token", res.data.key);
+                history.push("/game")
             })
             .catch(err => {
                 console.log(err)
@@ -100,7 +90,7 @@ export default function SignUp() {
                                 id="username"
                                 label="Email Address"
                                 name="username"
-                                autoComplete="username"
+                                autoComplete="email"
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -137,7 +127,7 @@ export default function SignUp() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        
+
                     >
                         Sign Up
           </Button>
@@ -150,9 +140,6 @@ export default function SignUp() {
                     </Grid>
                 </form>
             </div>
-            <Box mt={5}>
-                <RegisterForm />
-            </Box>
         </Container>
     );
 }

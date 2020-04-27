@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,19 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { axiosWithAuth } from '../../utils/axiosWithAuth'
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,7 +36,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+  let history = useHistory()
   const classes = useStyles();
+  const [userInfo, setUserInfo] = useState(
+    {
+      username: "",
+      password: ""
+    });
+
+  function handleChange(event) {
+    setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
+  }
+  let registerUser = user => {
+    axiosWithAuth().post("https://lambda-mud-test.herokuapp.com/api/login/", user)
+      .then(res => {
+        sessionStorage.setItem("token", res.data.key);
+        history.push("/game")
+      })
+      .catch(err => {
+        console.log(err)
+        console.log(user)
+      })
+  }
+  let handleSubmit = e => {
+    e.preventDefault()
+    setUserInfo({ ...userInfo })
+    registerUser(userInfo)
+  }
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,17 +75,18 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="username"
             label="Email Address"
-            name="email"
+            name="username"
             autoComplete="email"
             autoFocus
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
@@ -81,6 +98,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleChange}
           />
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -104,9 +122,6 @@ export default function SignIn() {
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
