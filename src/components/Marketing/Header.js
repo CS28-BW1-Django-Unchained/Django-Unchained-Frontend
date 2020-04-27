@@ -1,12 +1,12 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-
-
+import {Link} from 'react-router-dom'
+import Button from '@material-ui/core/Button'
+import RegisterForm from './RegisterForm'
 function Marketing() {
     return (
         <div>
-            <Button>Register</Button>
-            <Button>Login</Button>
+            <Link to="/register"><Button> Register </Button> </Link>
+            <Link to="/login"><Button> Login </Button> </Link>
         </div>
     )
 }
