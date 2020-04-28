@@ -8,6 +8,10 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    link: {
+        paddingRight: 75,
+        paddingLeft: 75
     }
 }))
 
@@ -27,9 +31,9 @@ function Marketing() {
         <div className={classes.header}>
             {!sessionStorage.getItem('token') &&
                 <>
-                    <Link to="/register"><Button>Register</Button></Link>
-                    <Link to="/login"><Button>Login</Button></Link>
-                    <Link to="/about"><Button>About</Button></Link>
+                    <Link className={classes.link} to="/about"><Button>About</Button></Link>
+                    <Link className={classes.link} to="/register"><Button>Register</Button></Link>
+                    <Link className={classes.link} to="/login"><Button>Login</Button></Link>
                 </>
             }
             {sessionStorage.getItem('token') &&
