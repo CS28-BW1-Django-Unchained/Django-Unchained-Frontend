@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from './Header'
+import Header from './Header';
 
 
 function MarketingIndex() {
@@ -8,4 +8,4 @@ function MarketingIndex() {
     )
 }
 
-export default MarketingIndex
+export default MarketingIndex;
