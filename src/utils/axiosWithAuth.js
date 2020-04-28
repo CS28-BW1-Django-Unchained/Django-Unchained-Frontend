@@ -5,7 +5,8 @@ export const axiosWithAuth = () => {
     return axios.create({
         baseURL: 'https://lambda-anywhere-fitness.herokuapp.com/api',
         headers: {
-            Authorization: "Token" + token
+            Authorization: `Token ${token}`
+
         }
     })
 }
