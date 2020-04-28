@@ -1,11 +1,22 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import RegisterForm from './RegisterForm';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(() => ({
+    header: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+}))
 
 
 function Marketing() {
-    let history = useHistory()
+    let history = useHistory();
+
+    const classes = useStyles();
+
     const handleLogout = e => {
         e.preventDefault()
         sessionStorage.removeItem('token');
@@ -13,7 +24,7 @@ function Marketing() {
         history.push('/login');
     }
     return (
-        <div>
+        <div className={classes.header}>
             {!sessionStorage.getItem('token') &&
                 <>
                     <Link to="/register"><Button>Register</Button></Link>
