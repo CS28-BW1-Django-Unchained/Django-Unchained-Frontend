@@ -3,64 +3,79 @@ import { useRef } from 'react'
 import { axiosWithAuth } from '../../utils/axiosWithAuth'
 import { useState } from 'react'
 
-let roomRectangles = []
 
+let roomIndices = {}
+let roomRectangles = []
+let playerInfo = null
+let roomData = []
 function App() {
-  let [playerInfo, setPlayerInfo] = useState()
-  let [playerLocation, setPlayerLocation] = useState([0, 0])
-  let [roomData, setRoomData] = useState()
+  let [playerLocation, setPlayerLocation] = useState([NaN, NaN])
+
   const canvasRef = useRef(null)
 
   useEffect(() => {
     axiosWithAuth().get("https://lambda-mud-test.herokuapp.com/api/adv/init/")
       .then(res => {
-        setPlayerInfo(res.data)
+        playerInfo = res.data
+        setPlayerLocation(roomRectangles[roomIndices[res.data.title]])
+        axiosWithAuth().get("https://lambda-mud-test.herokuapp.com/api/adv/rooms/")
+          .then(res2 => {
+            makeRoomRectangles(JSON.parse(res2.data.rooms))
+            console.log(playerInfo)
+            drawRectangles(roomRectangles[roomIndices[playerInfo.title]])
+
+          })
+          .catch(err => {
+            console.log(err)
+          })
       })
       .catch(err => {
         console.log(err)
       })
   }, [])
-  let newArr = roomRectangles.slice(0)
   function updateCanvas(x, y, color) {
     const ctx = canvasRef.current.getContext('2d');
-    ctx.fillRect(x * 100 + 640, y * 100 + 360, 100, 100);
     ctx.fillStyle = color
-
+    ctx.fillRect(x * 100 + 640, y * 100 + 360, 100, 100);
   }
-  newArr.map(room => {
-    console.log(playerLocation)
-    if (room[0] == playerLocation[0] && room[1] == playerLocation[1]) {
-      console.log("Player is here")
-      console.log(room[0], room[1])
-      updateCanvas(room[0], room[1], "green")
-    } else if (room[0] != playerLocation[0] && room[1] != playerLocation[1] || room[0] != playerLocation[0] && room[1] == playerLocation[1] || room[0] == playerLocation[0] && room[1] != playerLocation[1]) {
-      console.log("room here")
-      console.log(room[0], room[1])
-      setTimeout(function () {
-        updateCanvas(room[0], room[1], "black")
+  function drawRectangles(playerLoc) {
+    roomRectangles.map((room, index) => {
+      console.log(playerLoc)
+      if (room[0] == playerLoc[0] && room[1] == playerLoc[1]) {
+        updateCanvas(room[0], room[1], "green")
+      } else {
+        console.log("i'm here")
+        console.log(roomData)
+        if (roomData[roomIndices[playerInfo.title]].fields.n_to == index + 1) {
+          updateCanvas(room[0], room[1], "red")
+        } else if (roomData[roomIndices[playerInfo.title]].fields.e_to == index + 1) {
+          updateCanvas(room[0], room[1], "red")
 
-      }, 100)
-    }
+        } else if (roomData[roomIndices[playerInfo.title]].fields.s_to == index + 1) {
+          updateCanvas(room[0], room[1], "red")
 
-  })
-  useEffect(() => {
-    axiosWithAuth().get("https://lambda-mud-test.herokuapp.com/api/adv/rooms/")
-      .then(res => {
-        setRoomData(JSON.parse(res.data.rooms))
-        makeRoomRectangles(JSON.parse(res.data.rooms))
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
+        } else if (roomData[roomIndices[playerInfo.title]].fields.w_to == index + 1) {
+          updateCanvas(room[0], room[1], "red")
 
-  function makeRoomRectangles(roomData) {
-    roomData.sort(function (a, b) {
+        } else {
+          updateCanvas(room[0], room[1], "black")
+
+        }
+      }
+    })
+  }
+  function makeRoomRectangles(roomData2) {
+    roomRectangles = []
+    roomData2.map(item => {
+      roomRectangles.push(null)
+    })
+    roomData2.sort(function (a, b) {
       if (a.pk > b.pk) {
         return 1
       }
       return -1
     })
+    roomData = roomData2
     let queue = []
     let visited = []
     roomData.map(room => {
@@ -74,10 +89,10 @@ function App() {
         let x = node[1]
         let y = node[2]
         let room = node[0].fields
-        roomRectangles.push([x, y])
+        roomRectangles[node[0].pk - 1] = [x, y]
+        roomIndices[room.title] = node[0].pk - 1
         if (room.n_to != 0 && !visited[room.n_to - 1]) {
           queue.push([roomData[room.n_to - 1], x, y - 1])
-          console.log(queue.slice(0))
           visited[room.n_to - 1] = true
         }
         if (room.e_to != 0 && !visited[room.e_to - 1]) {
@@ -99,7 +114,10 @@ function App() {
   function postMove(direction) {
     axiosWithAuth().post("https://lambda-mud-test.herokuapp.com/api/adv/move/", { direction: direction })
       .then(res => {
-        setPlayerInfo(res.data)
+        playerInfo = res.data
+        setPlayerLocation(roomRectangles[roomIndices[res.data.title]])
+        drawRectangles(roomRectangles[roomIndices[res.data.title]])
+
       })
       .catch(err => {
         console.log(err)
@@ -113,18 +131,14 @@ function App() {
   }
   function SClick() {
     postMove("s")
-
   }
   function WClick() {
     postMove("w")
-
   }
 
 
   return (
     <>
-      {console.log(roomData)
-      }
       <table>
         <tr>
           <td>
@@ -186,7 +200,7 @@ function App() {
           Players in the room
       </h1>
         {playerInfo.players.map(player => (
-          <p>
+          <p key={player}>
             {player}
           </p>
         ))}
