@@ -82,9 +82,9 @@ export default function SignIn() {
             required
             fullWidth
             id="username"
-            label="Email Address"
+            label="Username"
             name="username"
-            autoComplete="email"
+            autoComplete="username"
             autoFocus
             onChange={handleChange}
           />
