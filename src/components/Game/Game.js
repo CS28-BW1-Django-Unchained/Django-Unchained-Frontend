@@ -14,11 +14,11 @@ function App() {
   const canvasRef = useRef(null)
 
   useEffect(() => {
-    axiosWithAuth().get("https://lambda-mud-test.herokuapp.com/api/adv/init/")
+    axiosWithAuth().get("/adv/init/")
       .then(res => {
         playerInfo = res.data
         setPlayerLocation(roomRectangles[roomIndices[res.data.title]])
-        axiosWithAuth().get("https://lambda-mud-test.herokuapp.com/api/adv/rooms/")
+        axiosWithAuth().get("/adv/rooms/")
           .then(res2 => {
             makeRoomRectangles(JSON.parse(res2.data.rooms))
             console.log(playerInfo)
@@ -112,7 +112,7 @@ function App() {
   }
 
   function postMove(direction) {
-    axiosWithAuth().post("https://lambda-mud-test.herokuapp.com/api/adv/move/", { direction: direction })
+    axiosWithAuth().post("adv/move/", { direction: direction })
       .then(res => {
         playerInfo = res.data
         setPlayerLocation(roomRectangles[roomIndices[res.data.title]])
