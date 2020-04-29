@@ -86,9 +86,9 @@ export default function SignUp() {
                                 required
                                 fullWidth
                                 id="username"
-                                label="Email Address"
+                                label="Username"
                                 name="username"
-                                autoComplete="email"
+                                autoComplete="username"
                                 onChange={handleChange}
                             />
                         </Grid>
