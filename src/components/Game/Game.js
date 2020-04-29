@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react'
-import { useRef } from 'react'
-import { axiosWithAuth } from '../../utils/axiosWithAuth'
-import { useState } from 'react'
+import React, { useEffect } from 'react';
+import { useRef } from 'react';
+import { axiosWithAuth } from '../../utils/axiosWithAuth';
+import { useState } from 'react';
+import pixelboy from './img/pixelboy.png';
 
+let roomIndices = {};
+let roomRectangles = [];
+let playerInfo = null;
+let roomData = [];
 
-let roomIndices = {}
-let roomRectangles = []
-let playerInfo = null
-let roomData = []
 function App() {
-  let [playerLocation, setPlayerLocation] = useState([NaN, NaN])
+  let [playerLocation, setPlayerLocation] = useState([NaN, NaN]);
 
-  const canvasRef = useRef(null)
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     axiosWithAuth().get("https://lambda-mud-test.herokuapp.com/api/adv/init/")
@@ -33,11 +34,13 @@ function App() {
         console.log(err)
       })
   }, [])
+
   function updateCanvas(x, y, color) {
     const ctx = canvasRef.current.getContext('2d');
     ctx.fillStyle = color
-    ctx.fillRect(x * 100 + 640, y * 100 + 360, 100, 100);
+    ctx.fillRect(x * 100 + 540, y * 100 + 360, 100, 100);
   }
+
   function drawRectangles(playerLoc) {
     roomRectangles.map((room, index) => {
       console.log(playerLoc)
@@ -64,6 +67,7 @@ function App() {
       }
     })
   }
+
   function makeRoomRectangles(roomData2) {
     roomRectangles = []
     roomData2.map(item => {
@@ -139,14 +143,17 @@ function App() {
 
   return (
     <>
-      <table>
+      <h3 style={{textAlign:"center"}}>Game Controls</h3>
+      <table
+        style={{border: "1px solid black", margin: "2% auto", padding: "5px", backgroundColor: "#4B3C39"}}
+      >
         <tr>
           <td>
 
           </td>
           <td>
             <button onClick={NClick}>
-              ^
+              N
             </button>
           </td>
           <td>
@@ -156,7 +163,7 @@ function App() {
         <tr>
           <td>
             <button onClick={WClick}>
-              &lt;
+              W
             </button>
           </td>
           <td>
@@ -164,7 +171,7 @@ function App() {
           </td>
           <td>
             <button onClick={EClick}>
-              &gt;
+              E
             </button>
           </td>
         </tr>
@@ -174,39 +181,40 @@ function App() {
           </td>
           <td>
             <button onClick={SClick}>
-              v
+              S
             </button>
           </td>
           <td>
-
           </td>
         </tr>
-
       </table>
+      <img src={pixelboy} alt="pixel warrior boy" style={{margin: "auto", display: "block"}}/>
       <canvas
-        style={{ border: "1px solid red", margin: "auto", width: "50%", display: "block" }}
+        style={{border: "5px solid black", margin: "auto", width: "50%", display: "block", backgroundColor: '#9B7653'}}
         ref={canvasRef}
         width={"1280px"}
         height={"720px"}
       />
       {playerInfo ? <div>
-        <h1>
-          {playerInfo.title}
+        <h1 style={{textAlign:"center"}}>
+          You await your expedition in the {playerInfo.title}.
         </h1>
-        <h3>
-          {playerInfo.description}
+        <h3 style={{textAlign:"center"}}>
+          ...And...{playerInfo.description}...
         </h3>
-        <h1>
-          Players in the room
-      </h1>
-        {playerInfo.players.map(player => (
-          <p key={player}>
-            {player}
-          </p>
-        ))}
+        <h3 style={{textAlign:"center", paddingTop: 100}}>
+          Look at all the explorers in the room! There must be something big and shiny hidden in here.
+        </h3>
+        <div style={{display: 'flex', margin: 'auto', width: '80%', flexWrap: 'wrap', justifyContent: "space-around"}}>
+          {playerInfo.players.map(player => (
+            <h6 key={player} style={{textAlign:"center", marginRight: 10}}>
+              {player} 
+            </h6>
+          ))}
+        </div>
       </div> : null}
     </>
 
   )
 }
-export default App
+export default App;
