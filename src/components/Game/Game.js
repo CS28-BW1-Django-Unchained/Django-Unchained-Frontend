@@ -50,21 +50,18 @@ function App() {
   function drawRectangles(playerLoc) {
     console.log(playerLoc)
     roomRectangles.map((room, index) => {
-      console.log(playerLoc)
-      if (room[0] == playerLoc[0] && room[1] == playerLoc[1]) {
+      if (room[0] === playerLoc[0] && room[1] === playerLoc[1]) {
         updateCanvas(room[0], room[1], "green")
       } else {
-        console.log("i'm here")
-        console.log(roomData)
-        if (roomData[roomIndices[playerInfo.title]].fields.n_to == index + 1) {
+        if (roomData[roomIndices[playerInfo.title]].fields.n_to === index + 1) {
           updateCanvas(room[0], room[1], "red")
-        } else if (roomData[roomIndices[playerInfo.title]].fields.e_to == index + 1) {
+        } else if (roomData[roomIndices[playerInfo.title]].fields.e_to === index + 1) {
           updateCanvas(room[0], room[1], "red")
 
-        } else if (roomData[roomIndices[playerInfo.title]].fields.s_to == index + 1) {
+        } else if (roomData[roomIndices[playerInfo.title]].fields.s_to === index + 1) {
           updateCanvas(room[0], room[1], "red")
 
-        } else if (roomData[roomIndices[playerInfo.title]].fields.w_to == index + 1) {
+        } else if (roomData[roomIndices[playerInfo.title]].fields.w_to === index + 1) {
           updateCanvas(room[0], room[1], "red")
 
         } else {
@@ -113,15 +110,15 @@ function App() {
           queue.push([roomData[room.n_to - 1], x, y - 1])
           visited[room.n_to - 1] = true
         }
-        if (room.e_to != 0 && !visited[room.e_to - 1]) {
+        if (room.e_to !== 0 && !visited[room.e_to - 1]) {
           queue.push([roomData[room.e_to - 1], x + 1, y])
           visited[room.e_to - 1] = true
         }
-        if (room.s_to != 0 && !visited[room.s_to - 1]) {
+        if (room.s_to !== 0 && !visited[room.s_to - 1]) {
           queue.push([roomData[room.s_to - 1], x, y + 1])
           visited[room.s_to - 1] = true
         }
-        if (room.w_to != 0 && !visited[room.w_to - 1]) {
+        if (room.w_to !== 0 && !visited[room.w_to - 1]) {
           queue.push([roomData[room.w_to - 1], x - 1, y])
           visited[room.s_to - 1] = true
         }
@@ -157,9 +154,9 @@ function App() {
 
   return (
     <>
-      <h3 style={{textAlign:"center"}}>Game Controls</h3>
+      <h3 style={{ textAlign: "center" }}>Game Controls</h3>
       <table
-        style={{border: "1px solid black", margin: "2% auto", padding: "5px", backgroundColor: "#4B3C39"}}
+        style={{ border: "1px solid black", margin: "2% auto", padding: "5px", backgroundColor: "#4B3C39" }}
       >
         <tr>
           <td>
@@ -202,7 +199,7 @@ function App() {
           </td>
         </tr>
       </table>
-      <img src={pixelboy} alt="pixel warrior boy" style={{margin: "auto", display: "block"}}/>
+      <img src={pixelboy} alt="pixel warrior boy" style={{ margin: "auto", display: "block" }} />
       <canvas
         style={{border: "5px solid black", margin: "auto", width: "90%", display: "block", backgroundColor: '#9B7653'}}
         ref={canvasRef}
@@ -210,19 +207,19 @@ function App() {
         height={"1400px"}
       />
       {playerInfo ? <div>
-        <h1 style={{textAlign:"center"}}>
+        <h1 style={{ textAlign: "center" }}>
           You await your expedition in the {playerInfo.title}.
         </h1>
-        <h3 style={{textAlign:"center"}}>
+        <h3 style={{ textAlign: "center" }}>
           ...And...{playerInfo.description}...
         </h3>
-        <h3 style={{textAlign:"center", paddingTop: 100}}>
+        <h3 style={{ textAlign: "center", paddingTop: 100 }}>
           Look at all the explorers in the room! There must be something big and shiny hidden in here.
         </h3>
-        <div style={{display: 'flex', margin: 'auto', width: '80%', flexWrap: 'wrap', justifyContent: "space-around"}}>
+        <div style={{ display: 'flex', margin: 'auto', width: '80%', flexWrap: 'wrap', justifyContent: "space-around" }}>
           {playerInfo.players.map(player => (
-            <h6 key={player} style={{textAlign:"center", marginRight: 10}}>
-              {player} 
+            <h6 key={player} style={{ textAlign: "center", marginRight: 10 }}>
+              {player}
             </h6>
           ))}
         </div>
