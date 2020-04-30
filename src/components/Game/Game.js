@@ -201,10 +201,10 @@ function App() {
       </table>
       <img src={pixelboy} alt="pixel warrior boy" style={{ margin: "auto", display: "block" }} />
       <canvas
-        style={{border: "5px solid black", margin: "auto", width: "90%", display: "block", backgroundColor: '#9B7653'}}
+        style={{border: "5px solid black", margin: "auto", width: "60%", display: "block", backgroundColor: '#9B7653'}}
         ref={canvasRef}
         width={"2550px"}
-        height={"1400px"}
+        height={"1440px"}
       />
       {playerInfo ? <div>
         <h1 style={{ textAlign: "center" }}>
