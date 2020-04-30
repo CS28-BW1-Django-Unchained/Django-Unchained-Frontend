@@ -44,7 +44,7 @@ function App() {
   function updateCanvas(x, y, color) {
     const ctx = canvasRef.current.getContext('2d');
     ctx.fillStyle = color
-    ctx.fillRect(x * 100 + 540, y * 100 + 360, 100, 100);
+    ctx.fillRect(x * 100, y * 100 + 1340, 100, 100);
   }
 
   function drawRectangles(playerLoc) {
@@ -204,10 +204,10 @@ function App() {
       </table>
       <img src={pixelboy} alt="pixel warrior boy" style={{margin: "auto", display: "block"}}/>
       <canvas
-        style={{border: "5px solid black", margin: "auto", width: "50%", display: "block", backgroundColor: '#9B7653'}}
+        style={{border: "5px solid black", margin: "auto", width: "90%", display: "block", backgroundColor: '#9B7653'}}
         ref={canvasRef}
-        width={"1280px"}
-        height={"720px"}
+        width={"2560px"}
+        height={"1440px"}
       />
       {playerInfo ? <div>
         <h1 style={{textAlign:"center"}}>
