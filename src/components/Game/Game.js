@@ -17,18 +17,22 @@ function App() {
   useEffect(() => {
     axiosWithAuth().get("/adv/init/")
       .then(res => {
+        console.log(res.data)
         playerInfo = res.data
         setPlayerLocation(roomRectangles[roomIndices[res.data.title]])
-        axiosWithAuth().get("/adv/rooms/")
-          .then(res2 => {
-            makeRoomRectangles(JSON.parse(res2.data.rooms))
-            console.log(playerInfo)
-            drawRectangles(roomRectangles[roomIndices[playerInfo.title]])
+        makeRoomRectangles(res.data.sewer_map.rooms)
+        drawRectangles(roomRectangles[res.data.room_id])
+        // axiosWithAuth().get("/adv/rooms/")
+        //   .then(res2 => {
+        //     console.log(res2.data)
+        //     makeRoomRectangles(JSON.parse(res2.data.rooms))
+        //     console.log(playerInfo)
+        //     drawRectangles(roomRectangles[roomIndices[playerInfo.title]])
 
-          })
-          .catch(err => {
-            console.log(err)
-          })
+        //   })
+        //   .catch(err => {
+        //     console.log(err)
+        //   })
       })
       .catch(err => {
         console.log(err)
@@ -69,6 +73,7 @@ function App() {
   }
 
   function makeRoomRectangles(roomData2) {
+    console.log(roomData2)
     roomRectangles = []
     roomData2.map(item => {
       roomRectangles.push(null)
@@ -87,14 +92,17 @@ function App() {
     })
     queue.push([roomData[0], 0, 0])
     visited[0] = true
+
+    console.log(queue)
     while (queue.length !== 0) {
       for (let i = 0; i < queue.length; i++) {
-        var node = queue.shift()
+        let node = queue.shift()
+        console.log(node[0])
         let x = node[1]
         let y = node[2]
-        let room = node[0].fields
+        let room = node[0]
         roomRectangles[node[0].pk - 1] = [x, y]
-        roomIndices[room.title] = node[0].pk - 1
+        roomIndices[room.id] = node[0].pk - 1
         if (room.n_to != 0 && !visited[room.n_to - 1]) {
           queue.push([roomData[room.n_to - 1], x, y - 1])
           visited[room.n_to - 1] = true

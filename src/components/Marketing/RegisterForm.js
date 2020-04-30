@@ -50,7 +50,7 @@ export default function SignUp() {
         setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
     }
     let registerUser = user => {
-        axios.post("https://my-django-app-54.herokuapp.com/api/registration/", user)
+        axios.post("https://my-django-app-56.herokuapp.com/api/registration/", user)
             .then(res => {
                 sessionStorage.setItem("token", res.data.key);
                 history.push("/game")
