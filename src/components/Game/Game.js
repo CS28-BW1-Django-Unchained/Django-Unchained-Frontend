@@ -44,7 +44,7 @@ function App() {
   function updateCanvas(x, y, color) {
     const ctx = canvasRef.current.getContext('2d');
     ctx.fillStyle = color
-    ctx.fillRect(x * 100, y * 100 + 1340, 100, 100);
+    ctx.fillRect(x * 85, y * 85 + 1355, 85, 85);
   }
 
   function drawRectangles(playerLoc) {
@@ -206,8 +206,8 @@ function App() {
       <canvas
         style={{border: "5px solid black", margin: "auto", width: "90%", display: "block", backgroundColor: '#9B7653'}}
         ref={canvasRef}
-        width={"2560px"}
-        height={"1440px"}
+        width={"2550px"}
+        height={"1400px"}
       />
       {playerInfo ? <div>
         <h1 style={{textAlign:"center"}}>
