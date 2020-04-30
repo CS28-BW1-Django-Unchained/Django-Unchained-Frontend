@@ -21,7 +21,9 @@ function App() {
         playerInfo = res.data
         setPlayerLocation(roomRectangles[roomIndices[res.data.title]])
         makeRoomRectangles(res.data.sewer_map.rooms)
-        drawRectangles(roomRectangles[res.data.room_id])
+        console.log(roomIndices, roomRectangles)
+        console.log(roomRectangles[roomIndices[res.data.room_id]])
+        drawRectangles(roomRectangles[roomIndices[res.data.title]])
         // axiosWithAuth().get("/adv/rooms/")
         //   .then(res2 => {
         //     console.log(res2.data)
@@ -46,6 +48,7 @@ function App() {
   }
 
   function drawRectangles(playerLoc) {
+    console.log(playerLoc)
     roomRectangles.map((room, index) => {
       console.log(playerLoc)
       if (room[0] == playerLoc[0] && room[1] == playerLoc[1]) {
@@ -79,17 +82,20 @@ function App() {
       roomRectangles.push(null)
     })
     roomData2.sort(function (a, b) {
-      if (a.pk > b.pk) {
+      if (a.id > b.id) {
         return 1
       }
       return -1
     })
+
+    console.log(roomData2)
     roomData = roomData2
     let queue = []
     let visited = []
     roomData.map(room => {
       visited.push(false)
     })
+    console.log(roomData[0])
     queue.push([roomData[0], 0, 0])
     visited[0] = true
 
@@ -97,12 +103,12 @@ function App() {
     while (queue.length !== 0) {
       for (let i = 0; i < queue.length; i++) {
         let node = queue.shift()
-        console.log(node[0])
+        // console.log(node[0])
         let x = node[1]
         let y = node[2]
-        let room = node[0]
-        roomRectangles[node[0].pk - 1] = [x, y]
-        roomIndices[room.id] = node[0].pk - 1
+        let room = node[0].fields
+        roomRectangles[node[0].id - 1] = [x, y]
+        roomIndices[room.title] = node[0].id - 1
         if (room.n_to != 0 && !visited[room.n_to - 1]) {
           queue.push([roomData[room.n_to - 1], x, y - 1])
           visited[room.n_to - 1] = true
